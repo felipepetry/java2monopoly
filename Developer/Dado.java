@@ -12,7 +12,7 @@ public class Dado{
 		return valor;
 	}
 
-	public void setValor(){
+	public void generateValor(){
 		valor = ThreadLocalRandom.current().nextInt(1, 7);
 	}
 

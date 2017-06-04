@@ -1,6 +1,7 @@
 public class Propriedades extends CasaDoTabuleiro{
 	
 	private int preco;
+	private int categoria;
 	private int aluguelAtual;
 	private int aluguel;
 	private int aluguelCasa1;
@@ -14,9 +15,10 @@ public class Propriedades extends CasaDoTabuleiro{
 	private int contCasas;
 	private Jogador proprietario;
 
-	public Propriedades(String legenda, int preco, int aluguel, int aluguelCasa1, int aluguelCasa2, int aluguelCasa3, int aluguelCasa4, int aluguelHotel, int casa, int hotel, int hipoteca){
+	public Propriedades(String legenda, int preco, int categoria, int aluguel, int aluguelCasa1, int aluguelCasa2, int aluguelCasa3, int aluguelCasa4, int aluguelHotel, int casa, int hotel, int hipoteca){
 		super(legenda);
 		this.preco = preco;
+		this.categoria = categoria;
 		this.aluguel = aluguel;
 		this.aluguelCasa1 = aluguelCasa1;
 		this.aluguelCasa2 = aluguelCasa2;
@@ -28,6 +30,11 @@ public class Propriedades extends CasaDoTabuleiro{
 		this.hipoteca = hipoteca;
 		aluguelAtual = aluguel;
 		contCasas = 0;
+		proprietario = null;
+	}
+
+	public int getPreco(){
+		return preco;
 	}
 
 	public int getAluguelAtual(){
@@ -74,16 +81,17 @@ public class Propriedades extends CasaDoTabuleiro{
 		aluguelAtual = aluguel;
 	}
 
-	//public void setContCasas(int contCasas){
-	//	if(this.contCasas + contCasas > 5)
-	//}
+	public void setContCasas(int contCasas){
+		if(this.contCasas + contCasas > 5){;}
+		else this.contCasas = this.contCasas + contCasas;
+	}
 
 	public void setProprietario(Jogador proprietario){
 		this.proprietario = proprietario;
 	}
 
 	public String toString(){
-		String toString = "O preço da propriedade é " + preco + "reais, e a sua hipoteca é de " + hipoteca + ". ";
+		String toString = "O preço da propriedade é " + preco + " reais, e a sua hipoteca é de " + hipoteca + " reais. ";
 		toString += "Os seus aluguéis são de:\n" + aluguel + " para nenhuma casa, ";
 		toString += aluguelCasa1 + " para uma casa, ";
 		toString += aluguelCasa2 + " para duas casas, ";

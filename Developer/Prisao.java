@@ -1,5 +1,5 @@
-public class Prisao{
+public class Prisao extends CasaDoTabuleiro{
 
-	private Jogador[] presos;
+	//p
 	
 }
