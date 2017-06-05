@@ -1,3 +1,5 @@
+package bancoImobiliario;
+
 import java.util.Arrays;
 
 public class Jogador{

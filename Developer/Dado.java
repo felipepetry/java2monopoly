@@ -1,3 +1,5 @@
+package bancoImobiliario;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Dado{

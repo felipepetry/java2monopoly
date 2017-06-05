@@ -1,3 +1,5 @@
+package bancoImobiliario;
+
 public class Propriedades extends CasaDoTabuleiro{
 	
 	private int preco;
@@ -91,14 +93,14 @@ public class Propriedades extends CasaDoTabuleiro{
 	}
 
 	public String toString(){
-		String toString = "O preÃ§o da propriedade Ã© " + preco + " reais, e a sua hipoteca Ã© de " + hipoteca + " reais. ";
-		toString += "Os seus aluguÃ©is sÃ£o de:\n" + aluguel + " para nenhuma casa, ";
+		String toString = "O preço da propriedade é " + preco + " reais, e a sua hipoteca é de " + hipoteca + " reais. ";
+		toString += "Os seus aluguéis são de:\n" + aluguel + " para nenhuma casa, ";
 		toString += aluguelCasa1 + " para uma casa, ";
 		toString += aluguelCasa2 + " para duas casas, ";
-		toString += aluguelCasa3 + " para trÃªs casas, ";	
+		toString += aluguelCasa3 + " para três casas, ";	
 		toString += aluguelCasa4 + " para quatro casas e ";
 		toString += aluguelHotel + " para um hotel.\n";
-		toString += "O preÃ§o de cada casa Ã© " + casa + " e preÃ§o de cada hotel Ã© " + hotel + ".";
+		toString += "O preço de cada casa é " + casa + " e preço de cada hotel é " + hotel + ".";
 		return toString;
 	}
 }

@@ -1,3 +1,5 @@
+package bancoImobiliario;
+
 import java.util.Scanner;
 import java.util.Arrays;
 
@@ -7,7 +9,7 @@ public class BancoImobiliario{
 		
 		Scanner in = new Scanner (System.in);
 		
-		System.out.println("Informe o nÃºmero de jogadores: ");
+		System.out.println("Informe o número de jogadores: ");
 		int num = in.nextInt();
 		
 		//Inicializa os objetos
@@ -22,114 +24,128 @@ public class BancoImobiliario{
 		}
 		
 		int cont = 0;
-		int soma = 0;
-		int dado = 0;
+		int soma;
 		int posicao;
 		
-		//Loop onde o jogo Ã© executado
+		//Loop onde o jogo é executado
 		while(true){
 			if(cont == num) cont = 0;
 			//if(osJogadores[cont].verificaPreso()) cont++;
 			if(cont == num) cont = 0;
-			System.out.print("Agora Ã© a vez de " + osJogadores[cont].getNome() + ". ");
-			soma = 0;
+			System.out.print("Agora é a vez de " + osJogadores[cont].getNome() + ". ");
 			
-			while(true){
-				System.out.println("Digite 'd' para lanÃ§ar os dados: ");
-				char verifica = in.next().charAt(0);
-
-				while(verifica != 'd'){	
-					System.out.print("Digite 'd' para lanÃ§ar os dados: ");
-					verifica = in.next().charAt(0);	
-				}
-
-				dado1.generateValor();
-				System.out.println("\fO valor do primeiro dado foi " + dado1.getValor());
-				dado2.generateValor();
-				System.out.println("O valor do segundo dado foi " + dado2.getValor());
-				soma = soma + dado1.somaValores(dado2);
-				
-				if(dado1.verificaValores(dado2)) break;
-				else dado++;
-
-				if(dado == 3){
-					osJogadores[cont].vaiPreso();
-					break;
-				}
-			}
-
-			dado = 0;
+			soma = lancaDado();
+			
+			if(soma == -1) osJogadores[cont].vaiPreso();
+			
 			osJogadores[cont].andar(soma);
 			posicao = osJogadores[cont].getPosicao();
-			System.out.println("VocÃª caiu na posiÃ§Ã£o " + (posicao + 1) + ". Nessa posiÃ§Ã£o se encontra " + asCasasDoTabuleiro[posicao].getLegenda());
+			System.out.println("Você caiu na posição " + (posicao + 1) + ". Nessa posição se encontra " + asCasasDoTabuleiro[posicao].getLegenda());
 			
-			if(asCasasDoTabuleiro[posicao] instanceof Propriedades){
-				if(((Propriedades)asCasasDoTabuleiro[posicao]).getProprietario() == null){
-					System.out.println("VocÃª quer comprar essa propriedade?\n" + ((Propriedades)asCasasDoTabuleiro[posicao]) + "\nDigite 's' para sim e 'n' para nÃ£o.");
-					char compra = in.next().charAt(0);
-					
-					while(compra != 's' && compra != 'n'){
-						System.out.println("Digite 's' para sim e 'n' para nÃ£o.");
-						compra = in.next().charAt(0);
-					}
-					
-					if(compra == 's'){ 
-						(osJogadores[cont]).updateSaldo(-((Propriedades)asCasasDoTabuleiro[posicao]).getPreco());
-						((Propriedades)asCasasDoTabuleiro[posicao]).setProprietario(osJogadores[cont]);
-						//System.out.println(osJogadores[cont].getSaldo());
-					}	
-				}
-				
-				else if(((Propriedades)asCasasDoTabuleiro[posicao]).getProprietario() != osJogadores[cont]){
-					System.out.println("VocÃª deve pagar " + ((Propriedades)asCasasDoTabuleiro[posicao]).getAluguelAtual() + " reais de aluguel para " + ((Propriedades)asCasasDoTabuleiro[posicao]).getProprietario());
-					osJogadores[cont].transfere(((Propriedades)asCasasDoTabuleiro[posicao]).getAluguelAtual(), ((Propriedades)asCasasDoTabuleiro[posicao]).getProprietario());
-					//System.out.println(osJogadores[cont].getSaldo());
-				}
-				
-				/*else{
-					CATEGORIA DAS PROPRIEDADES
-				}*/
-			}
+			acaoJogador(asCasasDoTabuleiro[posicao], osJogadores[cont], soma);
 			
-			else if(asCasasDoTabuleiro[posicao] instanceof Negocios){
-				if(((Negocios)asCasasDoTabuleiro[posicao]).getProprietario() == null){
-					System.out.println("VocÃª quer comprar esse negÃ³cio?\n" + ((Negocios)asCasasDoTabuleiro[posicao]) + "\nDigite 's' para sim e 'n' para nÃ£o.");
-					char compra = in.next().charAt(0);
-					
-					while(compra != 's' && compra != 'n'){
-						System.out.println("Digite 's' para sim e 'n' para nÃ£o.");
-						compra = in.next().charAt(0);
-					}
-					
-					if(compra == 's'){
-						(osJogadores[cont]).updateSaldo(-((Propriedades)asCasasDoTabuleiro[posicao]).getPreco());
-						((Propriedades)asCasasDoTabuleiro[posicao]).setProprietario(osJogadores[cont]); 
-					}
-				}
-
-				else if(((Negocios)asCasasDoTabuleiro[posicao]).getProprietario() != osJogadores[cont]){
-					System.out.println("VocÃª deve pagar " + ((Negocios)asCasasDoTabuleiro[posicao]).getTaxa() + " * " + soma + " reais de taxa para " + ((Negocios)asCasasDoTabuleiro[posicao]).getProprietario());
-					osJogadores[cont].transfere(((Negocios)asCasasDoTabuleiro[posicao]).getTaxa() * soma, ((Negocios)asCasasDoTabuleiro[posicao]).getProprietario());
-					//System.out.println(osJogadores[cont].getSaldo());
-				}
-			}
-
-			/*else if(asCasasDoTabuleiro[posicao] instanceof Vagas){
-
-			}
-
-			else if(asCasasDoTabuleiro[posicao] instanceof Prisao){
-
-			}
-
-			else if(asCasasDoTabuleiro[posicao] instanceof Cartas){
-
-			}
-
-			else{
-
-			}*/	
 			cont++;
 		}
+	}
+	
+	public static int lancaDado(){
+		
+		Scanner in = new Scanner(System.in);
+		Dado dado1 = new Dado();
+		Dado dado2 = new Dado();
+		int soma = 0;
+		int dado = 0;
+		
+		while(true){
+			System.out.println("Digite 'd' para lançar os dados: ");
+			char verifica = in.next().charAt(0);
+
+			while(verifica != 'd'){	
+				System.out.print("Digite 'd' para lançar os dados: ");
+				verifica = in.next().charAt(0);	
+			}
+			dado1.generateValor();
+			System.out.println("\fO valor do primeiro dado foi " + dado1.getValor());
+			dado2.generateValor();
+			System.out.println("O valor do segundo dado foi " + dado2.getValor());
+			soma = soma + dado1.somaValores(dado2);
+			
+			if(dado1.verificaValores(dado2)) break;
+			else dado++;
+
+			if(dado == 3){
+				soma = -1;
+				break;
+			}
+		}
+		return soma;
+	}
+	
+	public static void acaoJogador(CasaDoTabuleiro posicao, Jogador jogador, int soma){
+		Scanner in = new Scanner (System.in);
+		
+		if(posicao instanceof Propriedades){
+			if(((Propriedades)posicao).getProprietario() == null){
+				System.out.println("Você quer comprar essa propriedade?\n" + ((Propriedades)posicao) + "\nDigite 's' para sim e 'n' para não.");
+				char compra = in.next().charAt(0);
+				
+				while(compra != 's' && compra != 'n'){
+					System.out.println("Digite 's' para sim e 'n' para não.");
+					compra = in.next().charAt(0);
+				}
+				
+				if(compra == 's'){ 
+					(jogador).updateSaldo(-((Propriedades)posicao).getPreco());
+					((Propriedades)posicao).setProprietario(jogador);
+					//System.out.println(jogador.getSaldo());
+				}	
+			}
+			
+			else if(((Propriedades)posicao).getProprietario() != jogador){
+				System.out.println("Você deve pagar " + ((Propriedades)posicao).getAluguelAtual() + " reais de aluguel para " + ((Propriedades)posicao).getProprietario());
+				jogador.transfere(((Propriedades)posicao).getAluguelAtual(), ((Propriedades)posicao).getProprietario());
+				//System.out.println(jogador.getSaldo());
+			}
+			
+			/*else{
+				CATEGORIA DAS PROPRIEDADES
+			}*/
+		}
+		
+		else if(posicao instanceof Negocios){
+			if(((Negocios)posicao).getProprietario() == null){
+				System.out.println("Você quer comprar esse negócio?\n" + ((Negocios)posicao) + "\nDigite 's' para sim e 'n' para não.");
+				char compra = in.next().charAt(0);
+				
+				while(compra != 's' && compra != 'n'){
+					System.out.println("Digite 's' para sim e 'n' para não.");
+					compra = in.next().charAt(0);
+				}
+				
+				if(compra == 's'){
+					(jogador).updateSaldo(-((Negocios)posicao).getPreco());
+					((Negocios)posicao).setProprietario(jogador); 
+				}
+			}
+
+			else if(((Negocios)posicao).getProprietario() != jogador){
+				System.out.println("Você deve pagar " + ((Negocios)posicao).getTaxa() + " * " + soma + " reais de taxa para " + ((Negocios)posicao).getProprietario());
+				jogador.transfere(((Negocios)posicao).getTaxa() * soma, ((Negocios)posicao).getProprietario());
+				System.out.println(jogador.getSaldo());
+			}
+			
+			else{
+				System.out.println("Esse negócio já foi adquirido por você");
+			}
+		}
+
+		/*else if(posicao instanceof VaiParaPrisao){
+		}
+		else if(posicao instanceof Prisao){
+		}
+		else if(posicao instanceof Cartas){
+		}
+		else{
+		}*/	
 	}
 }
