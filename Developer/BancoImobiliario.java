@@ -1,143 +1,175 @@
-package bancoImobiliario;
-
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class BancoImobiliario{
-	
-	public static void main(String args[]){
-		
-		Scanner in = new Scanner (System.in);
-		
-		System.out.println("Informe o número de jogadores: ");
-		int num = in.nextInt();
-		
-		//Inicializa os objetos
-		Jogador[] osJogadores = new Jogador[num];
-		CasaDoTabuleiro[] asCasasDoTabuleiro = CasaDoTabuleiro.generateCasasDoTabuleiro();
-		Dado dado1 = new Dado();
-		Dado dado2 = new Dado();
-		
-		for(int cont = 0; cont < num; cont++){
-			System.out.print("\fInforme o nome do jogador " + (cont + 1) + ": ");
-			osJogadores[cont] = new Jogador(in.next());
-		}
-		
-		int cont = 0;
-		int soma;
-		int posicao;
-		
-		//Loop onde o jogo é executado
-		while(true){
-			if(cont == num) cont = 0;
-			//if(osJogadores[cont].verificaPreso()) cont++;
-			if(cont == num) cont = 0;
-			System.out.print("Agora é a vez de " + osJogadores[cont].getNome() + ". ");
-			
-			soma = lancaDado();
-			
-			if(soma == -1) osJogadores[cont].vaiPreso();
-			
-			osJogadores[cont].andar(soma);
-			posicao = osJogadores[cont].getPosicao();
-			System.out.println("Você caiu na posição " + (posicao + 1) + ". Nessa posição se encontra " + asCasasDoTabuleiro[posicao].getLegenda());
-			
-			acaoJogador(asCasasDoTabuleiro[posicao], osJogadores[cont], soma);
-			
-			cont++;
-		}
-	}
-	
-	public static int lancaDado(){
-		
-		Scanner in = new Scanner(System.in);
-		Dado dado1 = new Dado();
-		Dado dado2 = new Dado();
-		int soma = 0;
-		int dado = 0;
-		
-		while(true){
-			System.out.println("Digite 'd' para lançar os dados: ");
-			char verifica = in.next().charAt(0);
 
-			while(verifica != 'd'){	
-				System.out.print("Digite 'd' para lançar os dados: ");
-				verifica = in.next().charAt(0);	
-			}
-			dado1.generateValor();
-			System.out.println("\fO valor do primeiro dado foi " + dado1.getValor());
-			dado2.generateValor();
-			System.out.println("O valor do segundo dado foi " + dado2.getValor());
-			soma = soma + dado1.somaValores(dado2);
-			
-			if(dado1.verificaValores(dado2)) break;
-			else dado++;
+    static Scanner in = new Scanner (System.in);
+    static CasaDoTabuleiro[] asCasasDoTabuleiro = CasaDoTabuleiro.generateCasasDoTabuleiro();
 
-			if(dado == 3){
-				soma = -1;
-				break;
-			}
-		}
-		return soma;
-	}
-	
-	public static void acaoJogador(CasaDoTabuleiro posicao, Jogador jogador, int soma){
-		Scanner in = new Scanner (System.in);
-		
-		if(posicao instanceof Propriedades){
-			if(((Propriedades)posicao).getProprietario() == null){
-				System.out.println("Você quer comprar essa propriedade?\n" + ((Propriedades)posicao) + "\nDigite 's' para sim e 'n' para não.");
-				char compra = in.next().charAt(0);
-				
-				while(compra != 's' && compra != 'n'){
-					System.out.println("Digite 's' para sim e 'n' para não.");
-					compra = in.next().charAt(0);
-				}
-				
-				if(compra == 's'){ 
-					(jogador).updateSaldo(-((Propriedades)posicao).getPreco());
-					((Propriedades)posicao).setProprietario(jogador);
-					//System.out.println(jogador.getSaldo());
-				}	
-			}
-			
-			else if(((Propriedades)posicao).getProprietario() != jogador){
-				System.out.println("Você deve pagar " + ((Propriedades)posicao).getAluguelAtual() + " reais de aluguel para " + ((Propriedades)posicao).getProprietario());
-				jogador.transfere(((Propriedades)posicao).getAluguelAtual(), ((Propriedades)posicao).getProprietario());
-				//System.out.println(jogador.getSaldo());
-			}
-			
-			/*else{
-				CATEGORIA DAS PROPRIEDADES
-			}*/
-		}
-		
-		else if(posicao instanceof Negocios){
-			if(((Negocios)posicao).getProprietario() == null){
-				System.out.println("Você quer comprar esse negócio?\n" + ((Negocios)posicao) + "\nDigite 's' para sim e 'n' para não.");
-				char compra = in.next().charAt(0);
-				
-				while(compra != 's' && compra != 'n'){
-					System.out.println("Digite 's' para sim e 'n' para não.");
-					compra = in.next().charAt(0);
-				}
-				
-				if(compra == 's'){
-					(jogador).updateSaldo(-((Negocios)posicao).getPreco());
-					((Negocios)posicao).setProprietario(jogador); 
-				}
-			}
+    public static void main(String args[]){
 
-			else if(((Negocios)posicao).getProprietario() != jogador){
-				System.out.println("Você deve pagar " + ((Negocios)posicao).getTaxa() + " * " + soma + " reais de taxa para " + ((Negocios)posicao).getProprietario());
-				jogador.transfere(((Negocios)posicao).getTaxa() * soma, ((Negocios)posicao).getProprietario());
-				System.out.println(jogador.getSaldo());
-			}
+        System.out.println("Informe o nÃºmero de jogadores: ");
+        int jogadores = in.nextInt();
+
+        //Inicializa os objetos
+        Jogador[] osJogadores = new Jogador[jogadores];
+
+        for(int cont = 0; cont < jogadores; cont++){
+            System.out.print("\fInforme o nome do jogador " + (cont + 1) + ": ");
+            osJogadores[cont] = new Jogador(in.next());
+        }
+
+        int atual = -1;
+        int soma;
+        int posicao;
+
+        //Loop onde o jogo Ã© executado
+        while(true){
+
+            while(true){
+                if (atual == jogadores - 1) atual = -1;
+                atual++;
+                if(osJogadores[atual] != null) break;
+            }
+
+            System.out.print("Agora Ã© a vez de " + osJogadores[atual].getNome() + ". ");
+
+            soma = lancaDado();
+
+            if(soma == 0){
+                System.out.println("VocÃª foi preso! A cadeia fica na posiÃ§Ã£o 32.");
+                osJogadores[atual].vaiPreso();
+                continue;
+            }
+
+            osJogadores[atual].andar(soma);
+            posicao = osJogadores[atual].getPosicao();
+            System.out.println("VocÃª caiu na posiÃ§Ã£o " + (posicao + 1) + ". Nessa posiÃ§Ã£o se encontra " + asCasasDoTabuleiro[posicao].getLegenda());
+
+            acaoJogador(asCasasDoTabuleiro[posicao], osJogadores[atual], soma);
+
+            if(osJogadores[atual].verificaQuebrado()) osJogadores[atual] = null;
+        }
+    }
+
+    public static int lancaDado(){
+
+        Dado dado1 = new Dado();
+        Dado dado2 = new Dado();
+        int soma = 0;
+        int dado = 0;
+
+        while(true){
+            System.out.println("Digite 'd' para lanÃ§ar os dados: ");
+            char verifica = in.next().charAt(0);
+
+            while(verifica != 'd'){
+                System.out.print("Digite 'd' para lanÃ§ar os dados: ");
+                verifica = in.next().charAt(0);
+            }
+            dado1.generateValor();
+            System.out.println("O valor do primeiro dado foi " + dado1.getValor());
+            dado2.generateValor();
+            System.out.println("O valor do segundo dado foi " + dado2.getValor());
+            soma = soma + dado1.somaValores(dado2);
+
+            if(dado1.verificaValores(dado2)) break;
+            else dado++;
+
+            if(dado == 3){
+                soma = 0;
+                break;
+            }
+        }
+        return soma;
+    }
+
+    public static char validaCompra(){
+
+        char compra = in.next().charAt(0);
+
+        while(compra != 's' && compra != 'n'){
+            System.out.println("Digite 's' para sim e 'n' para nÃ£o.");
+            compra = in.next().charAt(0);
+        }
+
+        return compra;
+    }
+
+    public static boolean verificaCategoria(CasaDoTabuleiro casa, Jogador jogador){
+        if(((Propriedades)casa).getContCasas() == 5) return false;
+
+        int[] verifica;
+
+        if(((Propriedades)casa).getCategoria() == 1) verifica = new int[] {1, 3, 4};
+        else if (((Propriedades)casa).getCategoria() == 2) verifica = new int[] {6, 8, 9};
+        else if (((Propriedades)casa).getCategoria() == 3) verifica = new int[] {11, 13, 14};
+        else if (((Propriedades)casa).getCategoria() == 4) verifica = new int[] {17, 19};
+        else if (((Propriedades)casa).getCategoria() == 5) verifica = new int[] {21, 23};
+        else if (((Propriedades)casa).getCategoria() == 6) verifica = new int[] {26, 28, 29};
+        else if (((Propriedades)casa).getCategoria() == 7) verifica = new int[] {31, 33, 34, 36};
+        else verifica = new int[] {38, 39};
+
+        for(int cont = 0; cont < verifica.length; cont++){
+            if(((Propriedades)asCasasDoTabuleiro[cont]).getProprietario() != jogador) return false;
+            if(((Propriedades)asCasasDoTabuleiro[cont]).getContCasas() < ((Propriedades)casa).getContCasas()) return false;
+        }
+
+        return true;
+    }
+
+    public static void acaoJogador(CasaDoTabuleiro posicao, Jogador jogador, int soma){
+
+        //Caso o jogador caia em uma casa da categoria de Propriedades
+
+        if(posicao instanceof Propriedades){
+            if(((Propriedades)posicao).getProprietario() == null){
+                System.out.println("VocÃª quer comprar essa propriedade?\n" + ((Propriedades)posicao) + "\nDigite 's' para sim e 'n' para nÃ£o.");
+
+                if(validaCompra() == 's'){
+                    (jogador).updateSaldo(-((Propriedades)posicao).getPreco());
+                    ((Propriedades)posicao).setProprietario(jogador);
+                }
+            }
+
+            else if(((Propriedades)posicao).getProprietario() != jogador){
+                System.out.println("VocÃª deve pagar " + ((Propriedades)posicao).getAluguelAtual() + " reais de aluguel para " + ((Propriedades)posicao).getProprietario());
+                jogador.transfere(((Propriedades)posicao).getAluguelAtual(), ((Propriedades)posicao).getProprietario());
+            }
 			
 			else{
-				System.out.println("Esse negócio já foi adquirido por você");
+                System.out.println("VocÃª quer hipotecar essa propriedade por " + ((Propriedades)posicao).getHipoteca() + " reais?\nDigite 's' para sim e 'n' para nÃ£o.");
+                if(validaCompra() == 's') ((Propriedades)posicao).hipoteca(jogador);
+
+                else if(verificaCategoria(posicao, jogador)){
+                    System.out.println("VocÃª quer adicionar uma casa Ã  sua propriedade? VocÃª tem ");
+                }
 			}
-		}
+        }
+
+        //Caso o jogador caia em uma casa da categoria de NegÃ³cios
+
+        else if(posicao instanceof Negocios){
+
+            if(((Negocios)posicao).getProprietario() == null){
+                System.out.println("VocÃª quer comprar esse negÃ³cio?\n" + ((Negocios)posicao) + "\nDigite 's' para sim e 'n' para nÃ£o.");
+
+                if(validaCompra() == 's'){
+                    (jogador).updateSaldo(-((Negocios)posicao).getPreco());
+                    ((Negocios)posicao).setProprietario(jogador);
+                }
+            }
+
+            else if(((Negocios)posicao).getProprietario() != jogador){
+                System.out.println("VocÃª deve pagar " + ((Negocios)posicao).getTaxa() + " * " + soma + " reais de taxa para " + ((Negocios)posicao).getProprietario());
+                jogador.transfere(((Negocios)posicao).getTaxa() * soma, ((Negocios)posicao).getProprietario());
+                System.out.println(jogador.getSaldo());
+            }
+
+            else{
+                System.out.println("VocÃª quer hipotecar essa propriedade por " + ((Negocios)posicao).getHipoteca() + " reais?\nDigite 's' para sim e 'n' para nÃ£o.");
+                if(validaCompra() == 's') ((Negocios)posicao).hipoteca(jogador);
+            }
+        }
 
 		/*else if(posicao instanceof VaiParaPrisao){
 		}
@@ -146,6 +178,6 @@ public class BancoImobiliario{
 		else if(posicao instanceof Cartas){
 		}
 		else{
-		}*/	
-	}
+		}*/
+    }
 }

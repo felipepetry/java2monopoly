@@ -1,29 +1,27 @@
-package bancoImobiliario;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Dado{
-	
-	private int valor;
 
-	public Dado(){
-		valor = ThreadLocalRandom.current().nextInt(1, 7);
-	}
+    private int valor;
 
-	public int getValor(){
-		return valor;
-	}
+    public Dado(){
+        valor = ThreadLocalRandom.current().nextInt(1, 7);
+    }
 
-	public void generateValor(){
-		valor = ThreadLocalRandom.current().nextInt(1, 7);
-	}
+    public int getValor(){
+        return valor;
+    }
 
-	public int somaValores(Dado outroDado){
-		return valor + outroDado.getValor();
-	}
+    public void generateValor(){
+        valor = ThreadLocalRandom.current().nextInt(1, 7);
+    }
 
-	public boolean verificaValores(Dado outroDado){
-		if(valor == outroDado.getValor()) return false;
-		else return true;
-	}
+    public int somaValores(Dado outroDado){
+        return valor + outroDado.getValor();
+    }
+
+    public boolean verificaValores(Dado outroDado){
+        if(valor == outroDado.getValor()) return false;
+        else return true;
+    }
 }
